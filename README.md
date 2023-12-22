@@ -24,6 +24,8 @@ The script provides the following options:
 
 How to Use:
 
+(Mandatory!)
+    You must be in the /home/your_username directory and run the git clone https://github.com/Torwald91/Routine_tasks.git command.
     Run the script using Python 3: python3 Universal_UpClean.py or make it executable with chmod +x Universal_UpClean.py and then run ./Universal_UpClean.py.
     Follow the on-screen menu prompts to choose an option (1-3).
     For the "Update System" option, choose whether to upgrade the system and snaps.

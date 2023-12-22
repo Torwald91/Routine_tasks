@@ -1,0 +1,77 @@
+#!/bin/bash
+
+LOG="/root/Clean_system.log"
+GREEN="\033[1;32m"
+RED="\033[0;31m"
+YELLOW="\033[1;33m"
+ENDCOLOR="\033[0m"
+
+OLDCONF=$(dpkg -l | grep "^rc" | awk '{print $2}')
+CURKERNEL=$(uname -r | sed 's/-*[a-z]//g' | sed 's/-386//g')
+LINUXPKG="linux-(image|headers|ubuntu-modules|restricted-modules)"
+METALINUXPKG="linux-(image|headers|restricted-modules)-(generic|i386|server|common|rt|xen)"
+OLDKERNELS=$(dpkg -l | awk '{print $2}' | grep -E $LINUXPKG | grep -vE $METALINUXPKG | grep -v $CURKERNEL)
+SWAP_FILE="/dev/nvme0n1p9"  # Path to the swap file
+
+if [ $USER != root ]; then
+  echo -e $RED"You must be root"
+  exit 0
+fi
+
+echo "------------------------------------------------------------------------------" >> $LOG
+date  >> $LOG
+echo "------------------------------------------------------------------------------" >> $LOG
+
+echo -e $YELLOW"Package cleanup initiated\n"$ENDCOLOR
+
+# Checking for the presence of the swap file before performing operations
+if [ $SWAP_FILE != "/dev/nvme0n1p9" ]; then
+  echo -e $YELLOW"Not performing swap file content wipe\n"$ENDCOLOR
+else
+  echo -e $YELLOW"Performing swap file content wipe. Warning! This may lead to data loss in the swap file!\n"$ENDCOLOR
+
+  # Operations with the swap file
+  # Add your operations here
+  # Comment or remove the following lines to prevent swap file operations
+  # dd if=/dev/zero of=$SWAP_FILE bs=1M
+  # mkswap $SWAP_FILE
+  # swapon $SWAP_FILE
+fi
+
+# Removed the specific file wiping commands
+# ...
+
+echo -e $YELLOW"\nRemoving apt cache..."$ENDCOLOR
+apt -y clean 2>> $LOG
+
+echo -e $YELLOW"Removing partial packages..."$ENDCOLOR
+apt -y autoclean 2>> $LOG
+
+echo -e $YELLOW"Removing old configs..."$ENDCOLOR
+apt -y purge $OLDCONF 2>> $LOG
+
+echo -e $YELLOW"Removing unused packages..."$ENDCOLOR
+while [ -n "`deborphan`" ]; do
+    deborphan
+    echo
+    apt -y purge `deborphan` 2>>$LOG
+done
+
+echo -e $YELLOW"Removing old kernels..."$ENDCOLOR
+apt -y purge $OLDKERNELS 2>> $LOG
+
+echo -e $YELLOW"Removing packages installed as dependencies and no longer needed..."$ENDCOLOR
+apt -y autoremove --purge 2>> $LOG
+
+echo -e $YELLOW"Cleaning user trash cans..."$ENDCOLOR
+rm -rf /home/*/.local/share/Trash/*/** 2>> $LOG
+rm -rf /root/.local/share/Trash/*/** 2>> $LOG
+
+echo -e $GREEN"------------------------------------------------------------------------------"$ENDCOLOR >> $LOG
+echo -e $RED"Cleanup completed!"$ENDCOLOR >> $LOG
+echo -e $GREEN"------------------------------------------------------------------------------"$ENDCOLOR >> $LOG
+cat "$LOG"
+echo -e $GREEN"------------------------------------------------------------------------------"$ENDCOLOR >> $LOG
+
+
+
