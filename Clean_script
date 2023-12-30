@@ -1,4 +1,4 @@
-#!/bin/bash
+1#!/bin/bash
 
 LOG="/root/Clean_system.log"
 GREEN="\033[1;32m"
