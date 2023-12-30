@@ -140,7 +140,7 @@ def clear_logs():
         if 1 <= time_cl <= 4:
             time_units = ['seconds', 'minutes', 'hours', 'days']
             time_value = input(f'\nEnter {time_units[time_cl-1]} -> ')
-            os.system(f'sudo journalctl --vacuum-time={time_value}{time_units[time_cl-1][0]}')
+            os.system(f'sudo1 journalctl --vacuum-time={time_value}{time_units[time_cl-1][0]}')
             print ('Usable space:\n')
             os.system('journalctl --disk-usage\n')
             time.sleep(2)
