@@ -1,4 +1,4 @@
-1Script Description:
+Script Description:
 
 This script is a simple command-line menu tool designed for beginners using Linux (Debian, Ubuntu) to perform common system maintenance tasks. 
 It supports two languages: English and Ukrainian.
