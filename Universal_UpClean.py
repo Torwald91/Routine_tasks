@@ -95,7 +95,7 @@ def clean_system():
     """
     os.system('clear')
     username = os.getenv('USER')
-    script_path = f'sudo /home/{username}/routine_tasks/Clean_script'
+    script_path = f'sudo /home/{username}/routine-tasks/Clean_script'
     os.system(script_path)
     print('')
     os.system('apt clean')
@@ -104,7 +104,7 @@ def clean_system():
     snap_clear_choice = input('Clear snap revisions? (y/n): ').lower()
 
     if snap_clear_choice == 'y':
-        script_snp_path = f'sudo /home/{username}/routine_tasks/snap_clean'
+        script_snp_path = f'sudo /home/{username}/routine-tasks/snap_clean'
         os.system(script_snp_path)
         print('\nCompleted\n')
         print('')
